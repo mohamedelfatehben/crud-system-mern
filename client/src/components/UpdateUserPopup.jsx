@@ -41,7 +41,14 @@ function UpdateUserPopup({ user, fetchUsers }) {
         <div className="modal bg-gray-900 p-5 rounded-lg space-y-3">
           <button
             className="text-white bg-green-500 rounded-full px-1 absolute top-2 right-2"
-            onClick={close}
+            onClick={() => {
+              setFormData({
+                name: user.name,
+                age: user.age,
+                email: user.email,
+              });
+              close();
+            }}
           >
             &times;
           </button>
@@ -71,15 +78,30 @@ function UpdateUserPopup({ user, fetchUsers }) {
               placeholder="Email"
               className="px-2 py-1 rounded outline-none"
             />
-            <button
-              onClick={() => {
-                handleUpdate();
-                close();
-              }}
-              className="bg-green-600 hover:bg-green-400 rounded px-4 py-1 text-white"
-            >
-              Save
-            </button>
+            <div className="flex justify-center gap-x-2">
+              <button
+                onClick={() => {
+                  setFormData({
+                    name: user.name,
+                    age: user.age,
+                    email: user.email,
+                  });
+                  close();
+                }}
+                className="bg-red-600 hover:bg-red-400 rounded px-4 py-1 text-white"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleUpdate();
+                  close();
+                }}
+                className="bg-green-600 hover:bg-green-400 rounded px-4 py-1 text-white"
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}

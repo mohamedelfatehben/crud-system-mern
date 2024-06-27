@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 const _port = 3000;
+const jwt = require("jsonwebtoken");
+
 // Define CORS options
 const corsOptions = {
   origin: "*", // Allow requests from this origin
@@ -22,6 +25,7 @@ mongoose.connect(
 
 //Models
 const UserModel = require("./models/Users");
+const AdminModel = require("./models/Admins");
 
 //Get all users
 app.get("/users", async (req, res) => {
@@ -74,6 +78,39 @@ app.delete("/delete-user/:id", async (req, res) => {
   } catch (error) {
     res.status(400).send(error);
   }
+});
+
+//Register admin
+app.post("/register-admin", async (req, res) => {
+  const { username, password } = req.body;
+  const admin = await AdminModel.findOne({ username });
+  if (admin) {
+    return res.status(400).json({ message: "Admin already registered" });
+  }
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const newAdmin = AdminModel({ username, password: hashedPassword });
+  await newAdmin.save();
+  res.json({ message: "Admin added successfully" });
+});
+
+//Login admin
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  //verify existence
+  const admin = await AdminModel.findOne({ username });
+  if (!admin) {
+    return res.status(400).json({ message: "Admin does not exist" });
+  }
+  //verify password
+  const passwordValid = await bcrypt.compare(password, admin.password);
+  if (!passwordValid) {
+    return res
+      .status(400)
+      .json({ message: "Username or password is incorrect" });
+  }
+  //jwt
+  const token = jwt.sign({ id: admin._id }, process.env.SECRET);
+  return res.status(200).json({ token, id: admin._id });
 });
 
 app.listen(_port, () => {

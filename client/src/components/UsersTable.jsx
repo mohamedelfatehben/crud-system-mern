@@ -2,22 +2,22 @@
 import UpdateUserPopup from "./UpdateUserPopup";
 import DeleteUserPopup from "./DeleteUserPopup";
 
-function Users({ users, fetchUsers }) {
+function UsersTable({ users, fetchUsers }) {
   return (
-    <div className="flex justify-center">
-      <table className="table-auto border-collapse mt-5">
-        <thead>
+    <div className="flex justify-center max-w-full overflow-x-auto">
+      <table className="min-w-full divide-y border-collapse mt-5">
+        <thead className="bg-green-600">
           <tr>
-            <th className="border border-slate-600 border-collapse p-3 text-left bg-green-600 text-white">
+            <th className="border border-slate-600 border-collapse p-3 text-center text-white">
               Name
             </th>
-            <th className="border border-slate-600 border-collapse p-3 text-left bg-green-600 text-white">
+            <th className="border border-slate-600 border-collapse p-3 text-center text-white">
               Age
             </th>
-            <th className="border border-slate-600 border-collapse p-3 text-left bg-green-600 text-white">
+            <th className="border border-slate-600 border-collapse p-3 text-center text-white">
               Email
             </th>
-            <th className="border border-slate-600 border-collapse p-3 text-left bg-green-600 text-white">
+            <th className="border border-slate-600 border-collapse p-3 text-center text-white">
               Actions
             </th>
           </tr>
@@ -36,7 +36,11 @@ function Users({ users, fetchUsers }) {
               </td>
               <td className="border border-slate-700 border-collapse p-2 text-nowrap flex gap-x-1">
                 <UpdateUserPopup user={user} fetchUsers={fetchUsers} />
-                <DeleteUserPopup userId={user._id} fetchUsers={fetchUsers} />
+                <DeleteUserPopup
+                  userId={user._id}
+                  name={user.name}
+                  fetchUsers={fetchUsers}
+                />
               </td>
             </tr>
           ))}
@@ -46,4 +50,4 @@ function Users({ users, fetchUsers }) {
   );
 }
 
-export default Users;
+export default UsersTable;
